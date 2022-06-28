@@ -1,0 +1,27 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grpc-demo
+  namespace: default
+  annotations:
+    ingress.alb.yc.io/subnets: ddkgdejub6sg999mbh2o ### CHANGE THIS subnet list for ALB to accept traffic
+    ingress.alb.yc.io/external-ipv4-address: 46.243.yyy.xxx ### CHANGE THIS for external ip address to recieve traffic or use auto to auto
+    ingress.alb.yc.io/group-name: default ### default group for ingress resources, reach group will be served by dedicated ALB, while resources in the same group will share the same ALB
+    ingress.alb.yc.io/protocol: grpc ### specified that gRPC protocol will be configured for current ingress
+spec:
+  tls:
+    - hosts:
+        - grpc.myhostname.example
+      secretName: yc-certmgr-cert-id-b25trg5qr3eurt71t6m9 # CHANGE THIS for unique id of cerficicate from CloudIL Certificate Manager
+  rules:
+    - host: grpc.myhostname.example
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: grpc-service
+                port:
+                  number: 80
