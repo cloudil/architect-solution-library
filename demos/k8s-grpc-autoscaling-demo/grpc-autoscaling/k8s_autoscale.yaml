@@ -1,0 +1,70 @@
+---
+### Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-app
+  labels:
+    app: grpc-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grpc-app
+  template:
+    metadata:
+      name: grpc-app
+      labels:
+        app: grpc-app
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - grpc-app
+              topologyKey: "kubernetes.io/hostname"
+
+      containers:
+        - name: grpc-app
+          image: cr.cloudil.com/crlp3e6jmkn1r4s533al/grpc-test-server
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "256m"
+            limits:
+              memory: "500Mi"
+              cpu: "1000m"
+---
+### Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-service
+spec:
+  selector:
+    app: grpc-app
+  type: NodePort
+  ports:
+    - name: grpc
+      port: 80
+      targetPort: 8080 #!!
+      protocol: TCP
+      nodePort: 30085 #!!!!
+---
+### HPA
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: grpc-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name:  grpc-app
+  minReplicas: 1
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 20
