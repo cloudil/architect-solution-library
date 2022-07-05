@@ -4,11 +4,11 @@
 
 * Before that you created group `demo` in your GitLab instance. Create new project `app` in this group.
 
-![](../img/gitlab03-01.png)
+![](../img/gitlab05-01.png)
 
 * Create token to connect to GitLab. Open group `demo`, go to `Settings > Access Tokens` and create new access token:
 
-![](../img/gitlab03-02.png)
+![](../img/gitlab05-02.png)
 
 
 * Copy token to `./gitlab-token.yaml`. Make sure, that you are using the same `namespace` in the manifest, it should be the same as where ArgoCD in installed. After that, you can appy manifest using `kubectl apply -f gitlab-token.yaml`.
@@ -17,7 +17,7 @@
 
 * Also, you need to configure environmet variables for gitlab-runner. Open group `demo` in Gitlab and go to `Settings > CI/CD > Variables`. Create nesessary variables for connection to the container registry:
 
-![](../img/gitlab03-03.png)
+![](../img/gitlab05-03.png)
 
 
 * You used thouse variables already in [part 2](./02-argocd). Make sure, that thouse are applicable for group `demo` and project `app`. If there are no variables -- you need to create thouse.
@@ -55,7 +55,7 @@ The name of the image you can find in the build-task log -- you will need it lat
 
 * Create application using ArgoCD UI:
 
-![](../img/gitlab03-10.png)
+![](../img/gitlab05-10.png)
 
 * Fill out application fields and press `Create`:
 - Application name: `dynamic-env`
@@ -71,18 +71,18 @@ The name of the image you can find in the build-task log -- you will need it lat
 
 * As the result new application should appear:
 
-![](../img/gitlab03-11.png)
+![](../img/gitlab05-11.png)
 
 
 ## Testing
 
 * To see how ApplicationSet operates you need to go to project `app` and create new branch. Make sure the branch name starts with  `feature`.
 
-![](../img/gitlab03-04.png)
+![](../img/gitlab05-04.png)
 
 * After the creation of the new branch in `app`, in ArgoCD after several minutes new application shoud appear: 
 
-![](../img/gitlab03-05.png)
+![](../img/gitlab05-05.png)
 
 * You can find used version of the image in the `deployment` properties in application.
 
@@ -97,7 +97,7 @@ The name of the image you can find in the build-task log -- you will need it lat
 
 * Open repository `app` in GitLab and delete created branch.
 
-![](../img/gitlab03-08.png)
+![](../img/gitlab05-08.png)
 
 <br/>
 
